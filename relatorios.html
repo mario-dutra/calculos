@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Relatórios</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  
+</head>
+<body>
+  <h2>Relatórios Mensais</h2>
+  <input type="text" id="mesAno" readonly>
+
+  <button id="verRelatorio">Ver Relatório</button>
+
+  <div class="resumo-container">
+  <div class="resumo-grid">
+    <div class="resumo-header">Total Serviço</div>
+    <div class="resumo-header">Total Gastos</div>
+    <div class="resumo-header">Líquido</div>
+    <div class="resumo-value" id="totalServicos">R$ 0,00</div>
+    <div class="resumo-value" id="totalGastos">R$ 0,00</div>
+    <div class="resumo-value" id="liquido">R$ 0,00</div>
+  </div>
+  <button class="btn" style="background: #7098dd; color: #fff;" onclick="window.location.href='index.html'">Voltar</button>
+  
+
+</div>
+
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";     
+    import { getFirestore, collection, query, where, getDocs  } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+    const firebaseConfig = { 
+    apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
+    authDomain: "meu-app-calculos.firebaseapp.com",
+    projectId: "meu-app-calculos",
+    storageBucket: "meu-app-calculos.firebasestorage.app",
+    messagingSenderId: "199127737255",
+    appId: "1:199127737255:web:8c1f7ced0aa2953ebd0c82"
+     };
+    initializeApp(firebaseConfig);
+    const db = getFirestore();
+
+    document.getElementById('verRelatorio').addEventListener('click', async () => {
+      const mesAno = document.getElementById('mesAno').value;
+      const [ano, mes] = mesAno.split('-');
+      const inicio = new Date(ano, mes-1, 1).toISOString();
+      const fim = new Date(ano, parseInt(mes), 0).toISOString();
+
+      // Serviços
+      const qServicos = query(collection(db, "servicos"), where("data", ">=", inicio), where("data", "<=", fim));
+      const docsServicos = await getDocs(qServicos);
+      let totalServicos = 0;
+      docsServicos.forEach(doc => totalServicos += doc.data().valor);
+
+      // Gastos
+      const qGastos = query(collection(db, "produtos"), where("data", ">=", inicio), where("data", "<=", fim));
+      const docsGastos = await getDocs(qGastos);
+      let totalGastos = 0;
+      docsGastos.forEach(doc => totalGastos += doc.data().valor * doc.data().quantidade);
+
+    
+
+      document.getElementById('totalServicos').textContent = totalServicos.toFixed(2);
+      document.getElementById('totalGastos').textContent = totalGastos.toFixed(2);
+      document.getElementById('liquido').textContent = (totalServicos - totalGastos).toFixed(2);
+                                                                                                       
+       document.getElementById('totalservicos').textContent = totalservicos .toLocaleString('pt-BR', {
+      
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+});
+    });
+
+     document.getElementById('verDias').addEventListener('click', async () => {
+      const mes = document.getElementById('mes').value;
+      try {
+        const q = query(
+          collection(db, "servicos"),
+          where("data", ">=", `${new Date().getFullYear()}-${mes}-01`),
+          where("data", "<=", `${new Date().getFullYear()}-${mes}-31`)
+        );
+        const docs = await getDocs(q);
+        const totalRegistros = docs.docs.length;
+        document.getElementById('resultado').innerText = `Total de serviços Mês ${mes}: ${totalRegistros} realizados`;
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
+
+
+<script type="module">
+  
+  $("#mesAno").datepicker({
+    dateFormat: "mm/yy/dd",
+    changeMonth: true,
+    changeYear: true,
+    showButtonPanel: true,
+    onClose: function(dateText, inst) {
+      const mes = ("0" + (inst.selectedMonth + 1)).slice(-2);
+      const ano = inst.selectedYear;
+      $(this).val(`${ano}-${mes}`);
+    }
+  });
+
+  document.getElementById('verRelatorio').addEventListener('click', async () => {
+    const mesAno = document.getElementById('mesAno').value;
+   
+  });
+</script>
+
+ 
+<div class="trabalhos-mes">
+    selecione mes :
+    <select id="mes">
+    <option value="01">Janeiro</option>
+    <option value="02">Fevereiro</option>
+    <option value="03">Março</option>
+    <option value="04">Abril</option>
+    <option value="05">Maio</option>
+    <option value="06">Junho</option>
+    <option value="07">Julho</option>
+    <option value="08">Agosto</option>
+    <option value="09">Setembro</option>
+    <option value="10">Outubro</option>
+    <option value="11">Novembro</option>
+    <option value="12">Dezembro</option>
+  </select>
+  
+    <button id="verDias">Total de terviços realizado</button>
+    <p id="resultado"></p>
+  </div>
+
+
+
+
+</body>
+</html>

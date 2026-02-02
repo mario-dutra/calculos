@@ -1,0 +1,158 @@
+form {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input {
+  width: 95%;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/*estilização relatorios*/
+h2 {
+  color: #333;
+}
+
+input[type="text"], button {
+  width: 100%;
+  max-width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+}
+
+button:hover {
+  background: #45a049;
+}
+
+
+
+input[type="text"], button, #resultado {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+
+#resultado p {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+#resultado span {
+  font-weight: bold;
+  color: #333;
+}
+
+.resumo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.resumo-header {
+  background: #7098dd;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.resumo-value {
+  background: #f1f1f1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+#totalServicos,#totalGastos,#liquido{
+  font-size: 1.2rem;
+   font-weight: bold;
+}
+
+.trabalhos-mes{
+
+  width: 200px;
+  margin: auto;
+  padding: 30px;
+}
+
+/*fim estilização relatorio*/
+
+/*menu*/
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 10px;
+  background: #f0f0f0;
+}
+
+nav a {
+  margin: 10px;
+}
+/* fim menu*/
+
+
+
+/*responsividade calendario*/
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+#resultado {
+  margin-top: 20px;
+}
+
+input[type="text"] {
+  padding: 8px;
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+button {
+  padding: 8px 16px;
+  margin-top: 10px;
+}
+
+@media (max-width: 400px) {
+  #resultado p {
+    font-size: 14px;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  form {
+    margin: 10px;
+    padding: 10px;
+  }
+}
+
+

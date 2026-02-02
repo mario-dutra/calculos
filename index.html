@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+
+</head>
+<body>
+
+
+    <nav style="display: flex; gap: 20px; padding: 10px; background: #f0f0f0;">
+  <a href="gastos.html"><img src="./img/gastos.png" alt="Gastos" width="30"></a>
+  <a href="relatorios.html"><img src="./img/relatorio.png" alt="Relatório" width="30"></a>
+</nav>
+
+    
+    <form id="formServico">
+  <label>Tipo de Serviço:</label>
+  <input type="text" id="tipoServico" required>
+  
+  <label>Valor (R$):</label>
+  <input type="number" id="valorServico" step="0.01" required>
+  
+  <button type="submit">Salvar Serviço</button>
+
+</form>
+
+
+<!--
+*********************************************************8
+-->
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+  // Suas configs do Firebase
+  const firebaseConfig = {
+   
+    apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
+    authDomain: "meu-app-calculos.firebaseapp.com",
+    projectId: "meu-app-calculos",
+    storageBucket: "meu-app-calculos.firebasestorage.app",
+    messagingSenderId: "199127737255",
+    appId: "1:199127737255:web:8c1f7ced0aa2953ebd0c82"
+  };
+
+  initializeApp(firebaseConfig);
+  const dbApp = initializeApp(firebaseConfig);
+  const db = getFirestore(dbApp);
+
+  const form = document.getElementById('formServico');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tipo = document.getElementById('tipoServico').value;
+    const valor = parseFloat(document.getElementById('valorServico').value);
+    const data = new Date();
+
+    try {
+      await addDoc(collection(db, "servicos"), {
+        tipo,
+        valor,
+        data: data.toISOString()
+      });
+      alert("Serviço salvo!");
+      form.reset();
+    } catch (e) {
+      console.error("Erro:", e);
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

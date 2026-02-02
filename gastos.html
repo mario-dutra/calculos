@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gastos - Produtos</title>
+  <link rel="stylesheet" href="style.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <h2>Gastos - Produtos/Materiais</h2>
+  <form id="formProduto">
+    <label>Produto/Material:</label>
+    <input type="text" id="nomeProduto" required>
+    
+    <label>Quantidade:</label>
+    <input type="number" id="quantidadeProduto" required>
+    
+    <label>Valor (R$):</label>
+    <input type="number" id="valorProduto" step="0.01" required>
+    
+    <button type="submit">Salvar Produto</button>
+
+<button class="btn" style="background: #7098dd; color: #fff;" onclick="window.location.href='index.html'">Voltar</button>
+
+  </form>
+    
+  
+  <script type="module">
+    // script pra salvar no Firestore (igual ao de serviços)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+    const firebaseConfig = {
+        
+    apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
+    authDomain: "meu-app-calculos.firebaseapp.com",
+    projectId: "meu-app-calculos",
+    storageBucket: "meu-app-calculos.firebasestorage.app",
+    messagingSenderId: "199127737255",
+    appId: "1:199127737255:web:8c1f7ced0aa2953ebd0c82"
+        
+    };
+
+    initializeApp(firebaseConfig);
+    const db = getFirestore();
+    const form = document.getElementById('formProduto');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nome = document.getElementById('nomeProduto').value;
+      const quantidade = parseInt(document.getElementById('quantidadeProduto').value);
+      const valor = parseFloat(document.getElementById('valorProduto').value);
+      const data = new Date();
+      try {
+        await addDoc(collection(db, "produtos"), { nome, quantidade, valor, data: data.toISOString() });
+        alert("Produto salvo!");
+        form.reset();
+      } catch (e) { console.error(e); }
+    });
+  </script>
+</body>
+</html>
+
