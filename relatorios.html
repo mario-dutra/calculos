@@ -67,17 +67,27 @@
       let totalGastos = 0;
       docsGastos.forEach(doc => totalGastos += doc.data().valor * doc.data().quantidade);
 
-    
+     
 
-      document.getElementById('totalServicos').textContent = totalServicos.toFixed(2);
-      document.getElementById('totalGastos').textContent = totalGastos.toFixed(2);
-      document.getElementById('liquido').textContent = (totalServicos - totalGastos).toFixed(2);
-                                                                                                       
-       document.getElementById('totalservicos').textContent = totalservicos .toLocaleString('pt-BR', {
       
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-});
+      document.getElementById('liquido').textContent = (totalServicos - totalGastos).toFixed(2);
+         const valorFormatado=totalServicos.toLocaleString('pt-BR',{
+          style:'currency',
+          currency:'BRL'
+         })                                                                                              
+       document.getElementById('totalServicos').textContent = valorFormatado;
+//  formatacao
+       const valorFormatadoGastos=totalGastos.toLocaleString('pt-BR',{
+          style:'currency',
+          currency:'BRL'
+         })     
+      document.getElementById('totalGastos').textContent = valorFormatadoGastos;
+      //  formatacao
+        const valorFormatadoLiquido=(totalServicos - totalGastos).toLocaleString('pt-BR',{
+          style:'currency',
+          currency:'BRL'
+         })    
+           document.getElementById('liquido').textContent = valorFormatadoLiquido;        
     });
 
      document.getElementById('verDias').addEventListener('click', async () => {
