@@ -147,9 +147,7 @@ button {
     font-size: 14px;
   }
 
-  .resumo-container{
-   box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.3);
-}
+
   
 }
 
@@ -161,11 +159,10 @@ button {
     padding: 10px;
   }
 
-  .resumo-container{
-   box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.3);
-}
+ 
   
 }
+
 
 
 
