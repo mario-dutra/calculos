@@ -13,6 +13,13 @@ label {
   font-weight: bold;
 }
 
+.resumo-container{
+ background-color: #e8f2e8;
+ padding: 20px;
+ border-radius: 10px;
+ margin-bottom: 10px;
+}
+
 input {
   width: 95%;
   padding: 8px;
@@ -82,7 +89,7 @@ input[type="text"], button, #resultado {
 }
 
 .resumo-value {
-  background: #f1f1f1;
+  background:white;
   padding: 10px;
   text-align: center;
   border-radius: 4px;
@@ -93,12 +100,6 @@ input[type="text"], button, #resultado {
    font-weight: bold;
 }
 
-.trabalhos-mes{
-
-  width: 200px;
-  margin: auto;
-  padding: 30px;
-}
 
 /*fim estilização relatorio*/
 
