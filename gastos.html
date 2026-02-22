@@ -29,6 +29,7 @@
     // script pra salvar no Firestore (igual ao de serviços)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
     const firebaseConfig = {
         
     apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
@@ -42,6 +43,7 @@
 
     initializeApp(firebaseConfig);
     const db = getFirestore();
+     const auth = getAuth();
     const form = document.getElementById('formProduto');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
