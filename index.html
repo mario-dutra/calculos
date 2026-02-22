@@ -7,6 +7,27 @@
 
 <link rel="stylesheet" type="text/css" href="style.css" />
 
+<style>
+   /* Estilo básico para o modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+   #botaoLogar{
+    background-color: rgb(95, 95, 224);
+   }
+   #botaoFechar{
+    background-color: red;
+   }
+</style>
 
 </head>
 <body>
@@ -26,9 +47,19 @@
   <input type="number" id="valorServico" step="0.01" required>
   
   <button type="submit">Salvar Serviço</button>
-
+<button id="botaoLogar">Logar</button>
 </form>
 
+ 
+
+  <div id="modalLogin" class="modal">
+    <h2>Login</h2>
+    <input id="email" type="email" placeholder="Email">
+    <input id="senha" type="password" placeholder="Senha">
+    <button id="botaoEntrar">Entrar</button>
+    <button id="botaoFechar">Fechar</button>
+    <p id="mensagemLogin"></p>
+  </div>
 
 <!--
 *********************************************************8
@@ -37,7 +68,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
   import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
-
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
   // Suas configs do Firebase
   const firebaseConfig = {
    
@@ -52,6 +83,7 @@
   initializeApp(firebaseConfig);
   const dbApp = initializeApp(firebaseConfig);
   const db = getFirestore(dbApp);
+  const auth = getAuth();
 
   const form = document.getElementById('formServico');
   form.addEventListener('submit', async (e) => {
@@ -72,9 +104,36 @@
       console.error("Erro:", e);
     }
   });
-</script>
 
 
+
+    document.getElementById("botaoLogar").addEventListener("click", () => {
+      document.getElementById("modalLogin").style.display = "block";
+    });
+
+    document.getElementById("botaoFechar").addEventListener("click", () => {
+      document.getElementById("modalLogin").style.display = "none";
+    });
+
+    document.getElementById("botaoEntrar").addEventListener("click", () => {
+      var email = document.getElementById("email").value;
+      var senha = document.getElementById("senha").value;
+
+   signInWithEmailAndPassword(auth, email, senha)
+  .then((user) => {
+    console.log("Logado!", user);
+    document.getElementById("mensagemLogin").innerText = "Logado!";
+    document.getElementById("modalLogin").style.display = "none";
+  })
+  .catch((error) => {
+    console.error("Erro:", error);
+    document.getElementById("mensagemLogin").innerText = "Erro ao Logar ";
+  });
+    });
+
+   
+   
+  </script>
 
 </body>
 </html>
