@@ -159,9 +159,13 @@ button {
     padding: 10px;
   }
 
- 
+ .modal {
+      width: 80%;
+      top: 30%;
+     } 
   
 }
+
 
 
 
