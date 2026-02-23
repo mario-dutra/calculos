@@ -161,11 +161,14 @@ button {
 
  .modal {
       width: 80%;
-      top: 10%;
+      top: 30%;
      } 
   
 }
 
+#formServico{
+  margin-top: 70px;
+}
 
 
 
