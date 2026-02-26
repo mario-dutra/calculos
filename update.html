@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,48 +9,16 @@
  border-collapse: collapse;
  width: 100%;
  }
-
  th, td {
  border: 1px solid #ddd;
  padding: 8px;
  text-align: left;
  }
-
  @media only screen and (max-width: 600px) {
  table {
  font-size: 12px;
  }
- table, thead, tbody, th, td, tr {
- display: block;
  }
- thead tr {
- position: absolute;
- top: -9999px;
- left: -9999px;
- }
- tr {
- margin: 0 0 1rem 0;
- }
- td {
- border: none;
- border-bottom: 1px solid #eee;
- position: relative;
- padding-left: 50%;
- }
- td:before {
- position: absolute;
- top: 0;
- left: 6px;
- width: 45%;
- padding-right: 10px;
- white-space: nowrap;
- }
- td:nth-of-type(1):before { content: "Data"; }
- td:nth-of-type(2):before { content: "Tipo de Serviço"; }
- td:nth-of-type(3):before { content: "Valor"; }
- td:nth-of-type(4):before { content: "Ações"; }
- }
-
  .excluir {
  background-color: #ff0000;
  color: #fff;
@@ -75,7 +45,7 @@
  </style>
 </head>
 <body>
- <button id="fechar">Fechar</button>
+ <button id="fechar" onclick="window.history.back()">Fechar</button>
  <h2>Serviços do Mês</h2>
  <table id="listaServicos">
  <thead>
@@ -90,9 +60,9 @@
  </tbody>
  </table>
  <script type="module">
- import { initializeApp } from "https:                                                    
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
  import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
- import { getAuth } from "https:                                                     
+ import { getAuth } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
  const firebaseConfig = {
  apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
  authDomain: "meu-app-calculos.firebaseapp.com",
@@ -118,7 +88,7 @@
  listaServicos.innerHTML += `
  <tr>
  <td>${servico.data}</td>
- <td>${servico.tipoServico}</td>
+ <td>${servico.tipo}</td>
  <td>R$ ${servico.valor.toFixed(2)}</td>
  <td>
  <button class="excluir" data-id="${servico.id}">Excluir</button>
@@ -151,9 +121,6 @@
  }
  });
  });
- });
- document.getElementById('fechar').addEventListener('click', () => {
- window.history.back();
  });
  </script>
 </body>
