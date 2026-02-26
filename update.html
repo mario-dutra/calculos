@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Serviços do Mês</title>
+ <style>
+ table {
+ border-collapse: collapse;
+ width: 100%;
+ }
+ th, td {
+ border: 1px solid #ddd;
+ padding: 8px;
+ text-align: left;
+ }
+ @media only screen and (max-width: 600px) {
+ table {
+ font-size: 12px;
+ }
+ }
+ .excluir {
+ background-color: #ff0000;
+ color: #fff;
+ border: none;
+ padding: 5px 10px;
+ cursor: pointer;
+ }
+ .editar {
+ background-color: #00ff00;
+ color: #fff;
+ border: none;
+ padding: 5px 10px;
+ cursor: pointer;
+ }
+ #fechar {
+ position: absolute;
+ top: 10px;
+ right: 10px;
+ background-color: #ccc;
+ border: none;
+ padding: 5px 10px;
+ cursor: pointer;
+ }
+ </style>
+</head>
+<body>
+ <button id="fechar" onclick="window.history.back()">Fechar</button>
+ <h2>Serviços do Mês</h2>
+ <table id="listaServicos">
+ <thead>
+ <tr>
+ <th>Data</th>
+ <th>Tipo de Serviço</th>
+ <th>Valor</th>
+ <th>Ações</th>
+ </tr>
+ </thead>
+ <tbody>
+ </tbody>
+ </table>
+ <script type="module">
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+ import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+ import { getAuth } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+ const firebaseConfig = {
+ apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
+ authDomain: "meu-app-calculos.firebaseapp.com",
+ projectId: "meu-app-calculos",
+ storageBucket: "meu-app-calculos.firebasestorage.app",
+ messagingSenderId: "199127737255",
+ appId: "1:199127737255:web:8c1f7ced0aa2953ebd0c82"
+ };
+ initializeApp(firebaseConfig);
+ const db = getFirestore();
+ const auth = getAuth();
+ const urlParams = new URLSearchParams(window.location.search);
+ const mes = urlParams.get('mes');
+ const q = query(
+ collection(db, "servicos"),
+ where("data", ">=", `${new Date().getFullYear()}-${mes}-01`),
+ where("data", "<=", `${new Date().getFullYear()}-${mes}-31`)
+ );
+ const docs = await getDocs(q);
+ const servicos = docs.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+ const listaServicos = document.getElementById('listaServicos');
+ servicos.forEach(servico => {
+ listaServicos.innerHTML += `
+ <tr>
+ <td>${servico.data}</td>
+ <td>${servico.tipo}</td>
+ <td>R$ ${servico.valor.toFixed(2)}</td>
+ <td>
+ <button class="excluir" data-id="${servico.id}">Excluir</button>
+ <button class="editar" data-id="${servico.id}">Editar</button>
+ </td>
+ </tr>
+ `;
+ });
+ document.querySelectorAll('.excluir').forEach(botao => {
+ botao.addEventListener('click', async () => {
+ const id = botao.dataset.id;
+ await deleteDoc(doc(db, "servicos", id));
+ botao.parentElement.parentElement.remove();
+ });
+ });
+ document.querySelectorAll('.editar').forEach(botao => {
+ botao.addEventListener('click', (e) => {
+ const linha = e.target.closest('tr');
+ const valorCelula = linha.querySelector('td:nth-child(3)');
+ const valorOriginal = valorCelula.textContent;
+ valorCelula.innerHTML = `<input type="number" value="${valorOriginal.replace('R$ ', '').replace(',', '.')}" />`;
+ const input = valorCelula.querySelector('input');
+ input.focus();
+ input.addEventListener('keypress', async (e) => {
+ if (e.key === 'Enter') {
+ const novoValor = input.value;
+ const id = botao.dataset.id;
+ await updateDoc(doc(db, "servicos", id), { valor: parseFloat(novoValor) });
+ valorCelula.textContent = `R$ ${novoValor.replace('.', ',')}`;
+ }
+ });
+ });
+ });
+ </script>
+</body>
+</html>
