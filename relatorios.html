@@ -107,17 +107,24 @@
     });
 
     document.getElementById('verDias').addEventListener('click', async () => {
-      const mes = document.getElementById('mes').value;
-      try {
-        const q = query( collection(db, "servicos"), where("data", ">=", `${new Date().getFullYear()}-${mes}-01`), where("data", "<=", `${new Date().getFullYear()}-${mes}-31`) );
-        const docs = await getDocs(q);
-        const totalRegistros = docs.docs.length;
-        document.getElementById('resultado').innerText = ` ${totalRegistros} serviços realizados no  Mês ${mes}`;
-      } catch (e) {
-        console.error(e);
-      }
-    });
-
+ const mes = document.getElementById('mes').value;
+ try {
+ const q = query(
+ collection(db, "servicos"),
+ where("data", ">=", `${new Date().getFullYear()}-${mes}-01`),
+ where("data", "<=", `${new Date().getFullYear()}-${mes}-31`)
+ );
+ const docs = await getDocs(q);
+ const totalRegistros = docs.docs.length;
+ document.getElementById('resultado').innerHTML = `
+ <a href="update.html?mes=${mes}" target="_blank">
+ ${totalRegistros} serviços realizados no Mês ${mes}
+ </a>
+ `;
+ } catch (e) {
+ console.error(e);
+ }
+});
     document.getElementById('verValorTotal').addEventListener('click', async () => {
       const qServicos = query(collection(db, "servicos"));
       const docsServicos = await getDocs(qServicos);
