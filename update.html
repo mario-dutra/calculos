@@ -110,7 +110,7 @@
  document.querySelectorAll('.editar').forEach(botao => {
  botao.addEventListener('click', (e) => {
  const linha = e.target.closest('tr');
- const valorCelula = linha.querySelector('td:nth-child(3)');
+ const valorCelula = linha.querySelector('td:nth-child(2)');
  const valorOriginal = valorCelula.textContent;
  valorCelula.innerHTML = `<input type="number" value="${valorOriginal.replace('R$ ', '').replace(',', '.')}" />`;
  const input = valorCelula.querySelector('input');
@@ -128,3 +128,4 @@
  </script>
 </body>
 </html>
+
