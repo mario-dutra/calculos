@@ -1,8 +1,7 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Serviços do Mês</title>
  <style>
  table {
@@ -19,16 +18,17 @@
  font-size: 12px;
  }
  }
+
+ img{width: 20px;}
+
  .excluir {
- background-color: #ff0000;
  color: #fff;
  border: none;
  padding: 5px 10px;
  cursor: pointer;
  }
  .editar {
- background-color: #00ff00;
- color: #fff;
+  color: #fff;
  border: none;
  padding: 5px 10px;
  cursor: pointer;
@@ -37,23 +37,26 @@
  position: absolute;
  top: 10px;
  right: 10px;
- background-color: #ccc;
  border: none;
  padding: 5px 10px;
  cursor: pointer;
  }
+
+ 
  </style>
 </head>
 <body>
  <button id="fechar" onclick="window.history.back()">Fechar</button>
+ 
  <h2>Serviços do Mês</h2>
+ 
  <table id="listaServicos">
  <thead>
  <tr>
- <th>Data</th>
- <th>Tipo de Serviço</th>
+ <th>Serviço</th>
  <th>Valor</th>
- <th>Ações</th>
+ <th>Açoes</th>
+ 
  </tr>
  </thead>
  <tbody>
@@ -87,12 +90,12 @@
  servicos.forEach(servico => {
  listaServicos.innerHTML += `
  <tr>
- <td>${servico.data}</td>
+ 
  <td>${servico.tipo}</td>
  <td>R$ ${servico.valor.toFixed(2)}</td>
  <td>
- <button class="excluir" data-id="${servico.id}">Excluir</button>
- <button class="editar" data-id="${servico.id}">Editar</button>
+ <button class="excluir" data-id="${servico.id}"><img src="./img/botao-apagar.png"></button>
+ <button class="editar" data-id="${servico.id}"><img src="./img/botao-editar.png"></button>
  </td>
  </tr>
  `;
