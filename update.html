@@ -18,13 +18,7 @@
  font-size: 12px;
  }
  }
-.voltar{
-     background-color:green;
-     color:white;
-      }
-    body{
-       font-size:8pt;  
-    }
+
  img{width: 20px;}
 
  .excluir {
@@ -48,11 +42,14 @@
  cursor: pointer;
  }
 
+ body{
+    font-size: 10pt;
+ }
  
  </style>
 </head>
 <body>
- <div id="fechar" ><a href="relatorios.html"><button class="voltar">voltar</button></a></div>
+ <button id="fechar" onclick="window.history.back()">Fechar</button>
  
  <h2>Serviços do Mês</h2>
  
@@ -88,7 +85,7 @@
  const q = query(
  collection(db, "servicos"),
  where("data", ">=", `${new Date().getFullYear()}-${mes}-01`),
- where("data", "<=", `${new Date().getFullYear()}-${mes}-31`)
+ where("data", "<=", `${new Date().getFullYear()}-${mes}-32`)
  );
  const docs = await getDocs(q);
  const servicos = docs.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -134,10 +131,3 @@
  </script>
 </body>
 </html>
-
-
-
-
-
-
-
