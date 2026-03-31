@@ -56,90 +56,98 @@
      <button id="verValorTotal">Valor Total Anual</button>
   </div>
 
-     
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
-     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
-    const firebaseConfig = {
-      apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
-      authDomain: "meu-app-calculos.firebaseapp.com",
-      projectId: "meu-app-calculos",
-      storageBucket: "meu-app-calculos.firebasestorage.app",
-      messagingSenderId: "199127737255",
-      appId: "1:199127737255:web:8c1f7ced0aa2953ebd0c82"
-    };
-    initializeApp(firebaseConfig);
-    const db = getFirestore();
-     const auth = getAuth();
+  const firebaseConfig = {
+    apiKey: "AIzaSyA09nY-tstwEcqjBzYUkYdWl-TEoaLO8yA",
+    authDomain: "meu-app-calculos.firebaseapp.com",
+    projectId: "meu-app-calculos",
+    storageBucket: "meu-app-calculos.firebasestorage.app",
+    messagingSenderId: "199127737255",
+    appId: "1:199127737255:web:8c1f7ced0aa2953ebd0c82"
+  };
 
-    $("#mesAno").datepicker({
-      dateFormat: "mm/yy/dd",
-      changeMonth: true,
-      changeYear: true,
-      showButtonPanel: true,
-      onClose: function(dateText, inst) {
-        const mes = ("0" + (inst.selectedMonth + 1)).slice(-2);
-        const ano = inst.selectedYear;
-        $(this).val(`${ano}-${mes}`);
-      }
-    });
+  initializeApp(firebaseConfig);
+  const db = getFirestore();
+  const auth = getAuth();
 
-    document.getElementById('verRelatorio').addEventListener('click', async () => {
-      const mesAno = document.getElementById('mesAno').value;
-      const [ano, mes] = mesAno.split('-');
-      const inicio = new Date(ano, mes-1, 1).toISOString();
-      const fim = new Date(ano, parseInt(mes), 0).toISOString();
-      // Serviços
-      const qServicos = query(collection(db, "servicos"), where("data", ">=", inicio), where("data", "<=", fim));
-      const docsServicos = await getDocs(qServicos);
-      let totalServicos = 0;
-      docsServicos.forEach(doc => totalServicos += doc.data().valor);
-      // Gastos
-      const qGastos = query(collection(db, "produtos"), where("data", ">=", inicio), where("data", "<=", fim));
-      const docsGastos = await getDocs(qGastos);
-      let totalGastos = 0;
-      docsGastos.forEach(doc => totalGastos += doc.data().valor * doc.data().quantidade);
-      document.getElementById('totalServicos').textContent = totalServicos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('totalGastos').textContent = totalGastos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('liquido').textContent = (totalServicos - totalGastos).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    });
+  $("#mesAno").datepicker({
+    dateFormat: "mm/yy/dd",
+    changeMonth: true,
+    changeYear: true,
+    showButtonPanel: true,
+    onClose: function(dateText, inst) {
+      const mes = ("0" + (inst.selectedMonth + 1)).slice(-2);
+      const ano = inst.selectedYear;
+      $(this).val(`${ano}-${mes}`);
+    }
+  });
 
-    document.getElementById('verDias').addEventListener('click', async () => {
- const mes = document.getElementById('mes').value;
- try {
- const q = query(
- collection(db, "servicos"),
- where("data", ">=", `${new Date().getFullYear()}-${mes}-01`),
- where("data", "<=", `${new Date().getFullYear()}-${mes}-31`)
- );
- const docs = await getDocs(q);
- const totalRegistros = docs.docs.length;
- document.getElementById('resultado').innerHTML = `
- <a href="update.html?mes=${mes}" target="_blank">
- ${totalRegistros} serviços realizados no Mês ${mes}
- </a>
- `;
- } catch (e) {
- console.error(e);
- }
-});
-    document.getElementById('verValorTotal').addEventListener('click', async () => {
-      const qServicos = query(collection(db, "servicos"));
-      const docsServicos = await getDocs(qServicos);
-      let totalServicos = 0;
-      docsServicos.forEach(doc => totalServicos += doc.data().valor);
+  document.getElementById('verRelatorio').addEventListener('click', async () => {
+    const mesAno = document.getElementById('mesAno').value;
+    const [ano, mes] = mesAno.split('-');
+    const inicio = `${ano}-${mes}-01`;
+    const fim = `${ano}-${mes}-32`;
 
-      const qGastos = query(collection(db, "produtos"));
-      const docsGastos = await getDocs(qGastos);
-      let totalGastos = 0;
-      docsGastos.forEach(doc => totalGastos += doc.data().valor * doc.data().quantidade);
+    // Serviços
+    const qServicos = query(collection(db, "servicos"), where("data", ">=", inicio), where("data", "<=", fim));
+    const docsServicos = await getDocs(qServicos);
+    let totalServicos = 0;
+    docsServicos.forEach(doc => totalServicos += doc.data().valor);
 
-      document.getElementById('valorTotal').innerText = ` ${totalServicos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-      document.getElementById('gastosTotal').innerText = ` ${totalGastos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-      document.getElementById('liquidoTotal').innerText = ` ${(totalServicos - totalGastos).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-    });
-  </script>
+    // Gastos
+    const qGastos = query(collection(db, "produtos"), where("data", ">=", inicio), where("data", "<=", fim));
+    const docsGastos = await getDocs(qGastos);
+    let totalGastos = 0;
+    docsGastos.forEach(doc => totalGastos += doc.data().valor * doc.data().quantidade);
+
+    document.getElementById('totalServicos').textContent = totalServicos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('totalGastos').textContent = totalGastos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('liquido').textContent = (totalServicos - totalGastos).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  });
+
+  document.getElementById('verDias').addEventListener('click', async () => {
+    const mes = document.getElementById('mes').value;
+    try {
+      const ano = new Date().getFullYear();
+      const q = query(
+        collection(db, "servicos"),
+        where("data", ">=", `${ano}-${mes}-01`),
+        where("data", "<=", `${ano}-${mes}-32`)
+      );
+      const docs = await getDocs(q);
+      const totalRegistros = docs.docs.length;
+      document.getElementById('resultado').innerHTML = `
+        <a href="update.html?mes=${mes}" target="_blank">
+          ${totalRegistros} serviços realizados no Mês ${mes}
+        </a>
+      `;
+    } catch (e) {
+      console.error(e);
+    }
+  });
+
+  document.getElementById('verValorTotal').addEventListener('click', async () => {
+    const qServicos = query(collection(db, "servicos"));
+    const docsServicos = await getDocs(qServicos);
+    let totalServicos = 0;
+    docsServicos.forEach(doc => totalServicos += doc.data().valor);
+
+    const qGastos = query(collection(db, "produtos"));
+    const docsGastos = await getDocs(qGastos);
+    let totalGastos = 0;
+    docsGastos.forEach(doc => totalGastos += doc.data().valor * doc.data().quantidade);
+
+    document.getElementById('valorTotal').innerText = ` ${totalServicos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+    document.getElementById('gastosTotal').innerText = ` ${totalGastos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+    document.getElementById('liquidoTotal').innerText = ` ${(totalServicos - totalGastos).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+  });
+</script>
+
+
+
 </body>
 </html>
